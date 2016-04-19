@@ -4,6 +4,14 @@ var Script = new require('./script'),
     fsPath = require('path'),
     exec = require('child_process').exec;
 
+function existsSync(filename) {
+  try {
+    fs.accessSync(filename);
+    return true;
+  } catch(ex) {
+    return false;
+  }
+}
 
 module.exports = new Script({
   desc: 'Stops recording a video and saves output',
@@ -22,7 +30,7 @@ module.exports = new Script({
   var pidFile = argv.pid,
       pid;
 
-  if (!fsPath.existsSync(pidFile)) {
+  if (!existsSync(pidFile)) {
     console.error(pidFile, 'was not found');
     process.exit(1);
   }
