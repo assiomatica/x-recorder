@@ -3,7 +3,15 @@ var Script = new require('./script'),
     fs = require('fs'),
     exec = require('child_process').exec,
     fsPath = require('path');
-
+    
+function existsSync(filename) {
+  try {
+    fs.accessSync(filename);
+    return true;
+  } catch(ex) {
+    return false;
+  }
+}
 
 module.exports = new Script({
   desc: 'Starts an Xvfb instance. Will echo display id',
@@ -23,7 +31,7 @@ module.exports = new Script({
 
   lockFile = '/tmp/.X' + display + '-lock';
 
-  if (fsPath.existsSync(lockFile)) {
+  if (existsSync(lockFile)) {
     pid = fs.readFileSync(lockFile, 'utf8').trim();
     exec('kill ' + pid, function(err, stdout, stderr) {
       if (err) {
